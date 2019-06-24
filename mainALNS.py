@@ -11,7 +11,7 @@ from Classes.problem import Problem
 global _NB_ITE_MAX
 global _AUTONOMY
 
-_NB_ITE_MAX = 2
+_NB_ITE_MAX = 1
 _AUTONOMY = 20000
 
 #xini = 5

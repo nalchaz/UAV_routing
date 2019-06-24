@@ -15,6 +15,9 @@ class Solution:
 		random.shuffle(self.sol)
 		self.cost = Utils.DisTotal(self.sol, prob)
 
+	def calculateCost(self, prob):
+		self.cost = Utils.DisTotal(self.sol, prob)
+
 	def __str__(self):
 		return str(self.sol) + " Cost : " + str(self.cost)
 

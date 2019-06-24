@@ -22,14 +22,12 @@ filename='ParaServidor_11_12/Ins10PerEPhantom'
 prob = Problem(filename)
 pop = Genetic.generateRandomPopulation(prob, 50)
 
+# print(str(pop))
 
-sol1 = Solution()
-sol1.sol = [1,2,3,4,5,6]
+# child = Genetic.generateChild(prob, pop)
 
-sol2 = Solution()
-sol2.sol = [1,2,3,4,5,6]
+# print(str(child))
 
-pop.addElement(sol1)
-pop.addElement(sol2)
-
-print(str(pop))
+childPop = Genetic.newGeneration(prob, pop)
+print(pop)
+print(childPop)

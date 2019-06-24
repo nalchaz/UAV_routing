@@ -7,14 +7,15 @@ class Population:
 		self.hashElements = []
 
 	def addElement(self, elem):
-		if hash(elem) in self.hashElements:
-			return False
-		else:
-			self.elements.append(elem)
-			self.hashElements.append(hash(elem))
-			self.elements.sort(key = lambda x: x.cost)
-			return True
+		self.elements.append(elem)
+		self.hashElements.append(hash(elem))
+		self.elements.sort(key = lambda x: x.cost)
 
+	def exist(self, elem):
+		if hash(elem) in self.hashElements:
+			return True
+		else:
+			return False
 
 	def __str__(self):
 		stri = []
