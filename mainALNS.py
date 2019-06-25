@@ -7,11 +7,12 @@ import Batteries
 import LocalSearch
 import time
 from Classes.problem import Problem
+from Classes.solution import Solution
 
 global _NB_ITE_MAX
 global _AUTONOMY
 
-_NB_ITE_MAX = 1
+_NB_ITE_MAX = 2000
 _AUTONOMY = 20000
 
 #xini = 5
@@ -19,15 +20,12 @@ _AUTONOMY = 20000
 #x = [4, 3, 7, 2, 1, 9, 4, 6, 10, 11] # 4, 9, 2] 
 #y = [5, 9, 1, 4, 4, 2, 9, 8, 8, 10] # 11, 8, 8] 
 
-filename='ParaServidor_11_12/Ins100PerEPhantom'
+filename='ParaServidor_11_12/Ins20PerEPhantom'
 
 prob = Problem(filename)
 
-Solucao = [] # vetor solução
-for i in range(len(prob.x)):
-    Solucao = Solucao + [i+1]
-
-random.shuffle(Solucao)
+sol = Solution()
+sol.generateRandomSolution(prob)
 
 startTotalTime = time.time()
 heuGreedyTime = 0
@@ -65,9 +63,9 @@ for i in range(len(VetIns)):
 # ALNS:
 
 #C1, C2 = CustoTotal(sol)
-D1 = Utils.DisTotal(Solucao, prob)
+D1 = Utils.DisTotal(sol.sol, prob)
 ite = 0;
-BestVet = Solucao.copy()
+BestVet = sol.copy()
 #BestS = min(C1,C2)
 BestD = D1
 print("\nDistância Inicial: " + str(BestD))
@@ -100,47 +98,46 @@ while ite < _NB_ITE_MAX:
             AuxIns = i
             break
 
-
-    SolAux = Solucao.copy()
+    SolAux = Solution()
 
     # Removendo itens da solução
     if AuxRem == 0:
         start = time.time()
-        SolAux, vet = ALNS.HeuShaw(SolAux, q, prob)
+        SolAux.sol, vet = ALNS.HeuShaw(sol.sol, q, prob)
         heuShawTime = heuShawTime + time.time() - start
     elif AuxRem == 1:
         start = time.time()
-        SolAux, vet = ALNS.HeuRand(SolAux, q, prob)
+        SolAux.sol, vet = ALNS.HeuRand(sol.sol, q, prob)
         heuRandTime = heuRandTime + time.time() - start
     elif AuxRem == 2:  
         start = time.time()      
-        SolAux, vet = ALNS.HeuPiorPos(SolAux, q, prob)
+        SolAux.sol, vet = ALNS.HeuPiorPos(sol.sol, q, prob)
         heuPiorPosTime = heuPiorPosTime + time.time() - start
 
     # Inserindo itens da solução
     if AuxIns == 0:
         start = time.time()
-        SolAux = ALNS.HeuGreedy(SolAux, vet, prob)
+        SolAux.sol = ALNS.HeuGreedy(sol.sol, vet, prob)
         heuGreedyTime = heuGreedyTime + time.time() - start
     elif AuxIns == 1:
         start = time.time()
-        SolAux = ALNS.HeuRegret(SolAux, vet, prob)
+        SolAux.sol = ALNS.HeuRegret(sol.sol, vet, prob)
         heuRegretTime = heuRegretTime + time.time() - start
 
-    Daux = Utils.DisTotal(SolAux, prob)
+    Daux = Utils.DisTotal(SolAux.sol, prob)
 
     # LOCAL SEARCH
     start = time.time()
     LocalSol = LocalSearch.globalLocalSearch(SolAux, prob)
     localSearchTime = localSearchTime + time.time() - start
-    LocalDis = Utils.DisTotal(LocalSol, prob)
+    LocalDis = Utils.DisTotal(LocalSol.sol, prob)
 
 
     if BestD > LocalDis:
 
         BestD = LocalDis
-        BestVet = LocalSol.copy()
-        Solucao = LocalSol.copy()
+        BestVet = LocalSol
+        sol = LocalSol
 
         VetRem[AuxRem] = VetRem[AuxRem]*1.25 #+ 0.5
         VetIns[AuxIns] = VetIns[AuxIns]*1.25 #+ 0.5
@@ -154,7 +151,7 @@ while ite < _NB_ITE_MAX:
             
     ite = ite + 1
 
-bat = Batteries.setBatteries(BestVet, _AUTONOMY, prob)
+bat = Batteries.setBatteries(BestVet.sol, _AUTONOMY, prob)
 
 
 totalTime = time.time() - startTotalTime
@@ -169,7 +166,7 @@ print('Global program took {:.3f} s'.format(totalTime))
 
 print("\nEsta foi a melhor distância final encontrada: " + str(BestD))
 
-# print("Melhor Solução Final: " + str(BestVet))
+print("Melhor Solução Final: " + str(BestVet.sol))
 
 # DrawPath.subplot(1, 2, 2)   #For 2 figures
 
@@ -181,5 +178,5 @@ if bat == None:
 else:
     DrawPath.drawPoints(prob.xini, prob.yini, prob.x, prob.y, bat)
 
-DrawPath.drawLines(prob.xini, prob.yini, prob.x, prob.y, BestVet)
+DrawPath.drawLines(prob.xini, prob.yini, prob.x, prob.y, BestVet.sol)
 DrawPath.draw()

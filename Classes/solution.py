@@ -6,7 +6,6 @@ class Solution:
 	def __init__(self):
 		self.sol = [] # vector solution
 		self.cost = 0
-		
 
 	def generateRandomSolution(self, prob):
 		for i in range(len(prob.x)):
@@ -18,6 +17,12 @@ class Solution:
 	def calculateCost(self, prob):
 		self.cost = Utils.DisTotal(self.sol, prob)
 
+	def copy(self):
+		copy = type(self)
+		copy.sol = self.sol
+		copy.cost = self.cost
+		return copy
+
 	def __str__(self):
 		return str(self.sol) + " Cost : " + str(self.cost)
 
@@ -26,3 +31,5 @@ class Solution:
 
 	def __hash__(self):
 		return hash('.'.join(str(x) for x in self.sol))
+
+	

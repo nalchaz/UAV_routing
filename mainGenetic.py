@@ -13,21 +13,21 @@ from Classes.solution import Solution
 global _NB_ITE_MAX
 global _AUTONOMY
 
-_NB_ITE_MAX = 2
+_NB_ITE_MAX = 500
 _AUTONOMY = 20000
 
 
-filename='ParaServidor_11_12/Ins10PerEPhantom'
+filename='ParaServidor_11_12/Ins20PerEPhantom'
 
 prob = Problem(filename)
 pop = Genetic.generateRandomPopulation(prob, 50)
 
-# print(str(pop))
-
-# child = Genetic.generateChild(prob, pop)
-
-# print(str(child))
-
-childPop = Genetic.newGeneration(prob, pop)
 print(pop)
-print(childPop)
+
+for i in range(0, _NB_ITE_MAX):
+	if i%500 == 0:
+		Genetic.mixWithRandomSolutions(prob, pop)
+	childPop = Genetic.generateChildPopulation(prob, pop)
+	pop = Genetic.getNewGeneration(pop, childPop)
+
+print(pop)

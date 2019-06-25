@@ -5,7 +5,7 @@ import random
 
 from Classes.solution import Solution
 from Classes.population import Population
-
+import LocalSearch
 def generateRandomSolution(prob):
 	sol = Solution()
 	sol.generateRandomSolution(prob)
@@ -16,7 +16,22 @@ def generateRandomPopulation(prob, size):
 
 	for i in range(0, size):
 		sol = generateRandomSolution(prob)
+		LocalSearch.globalLocalSearch(sol, prob)
+		while pop.exist(sol):
+			sol = generateRandomSolution(prob)
+			LocalSearch.globalLocalSearch(sol, prob)
 		pop.addElement(sol)
+
+	return pop
+
+def mixWithRandomSolutions(prob, pop):
+	for i in range(int(len(pop)/2), len(pop)):
+		sol = generateRandomSolution(prob)
+		LocalSearch.globalLocalSearch(sol, prob)
+		while pop.exist(sol):
+			sol = generateRandomSolution(prob)
+			LocalSearch.globalLocalSearch(sol, prob)
+		pop.elements[i]= sol
 
 	return pop
 
@@ -63,18 +78,36 @@ def generateChild(prob, pop):
 
 	return child
 	
-def newGeneration(prob, pop):
+def generateChildPopulation(prob, pop):
 
-	#Generating a child population
 
 	childPop = Population()
 
 	for i in range(0,len(pop.elements)):
 		child = generateChild(prob, pop)
+		LocalSearch.globalLocalSearch(child, prob)
 
 		while pop.exist(child) or childPop.exist(child):
 			child = generateChild(prob, pop)
+			LocalSearch.globalLocalSearch(child, prob)
+		
 		childPop.addElement(child)
 
 	return childPop
 
+def getNewGeneration(pop, childPop):
+	size1 = len(pop) 
+	size2 = len(childPop)
+	maxSize = size1 if size1 < size2 else size2					#Normally size1 = size2 but just in case we take the smallest
+	newGen = Population()
+	i = j = count = 0
+	while i < size1 and j < size2 and count < maxSize: 						#Merging the two lists taking best solutions 
+		if pop[i].cost < childPop[j].cost: 
+			newGen.addElement(pop[i]) 
+			i += 1
+
+		else: 
+			newGen.addElement(childPop[j]) 
+			j += 1
+		count += 1
+	return newGen

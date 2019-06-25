@@ -24,3 +24,9 @@ class Population:
 			stri.append('\n')
 
 		return ''.join(stri)
+
+	def __len__(self):
+		return len(self.elements)
+
+	def __getitem__(self, index):
+		return self.elements[index]
