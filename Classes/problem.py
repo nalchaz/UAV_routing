@@ -27,3 +27,15 @@ class Problem:
 		for i in range(len(Dados.Cset)):
 			self.x = self.x + [Dados.Cset[i][0]*1000]
 			self.y = self.y + [Dados.Cset[i][1]*1000]
+
+		self.distances = [[0 for a in range(len(self.x))] for b in range(len(self.x))]			#Distance matrix for fast calculs
+		self.distanceIni = []
+
+
+		for i in range(len(self.x)):
+			self.distanceIni += [(((self.xini-self.x[i]))**2 + ((self.yini-self.y[i]))**2)**(1/2)]
+
+		for i in range(len(self.x)):
+			for j in range(len(self.x)):
+				self.distances[i][j] = (((self.x[i]-self.x[j]))**2 + ((self.y[i]-self.y[j]))**2)**(1/2)
+		

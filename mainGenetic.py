@@ -14,10 +14,10 @@ global _NB_ITE_MAX
 global _AUTONOMY
 
 _POPULATION_SIZE = 100
-_NB_ITE_MAX = 1000
+_NB_ITE_MAX = 200
 _AUTONOMY = 20000
 
-filename='ParaServidor_11_12/Ins10PerEPhantom'
+filename='ParaServidor_11_12/Ins100PerEPhantom'
 
 def displayBestSolutions(pop, prob):
 	DrawPath.subplot(2, 2, 1)
@@ -56,21 +56,26 @@ def displayBestSolutions(pop, prob):
 
 
 
+startTotalTime = time.time()
 
 prob = Problem(filename)
 pop = Genetic.generateRandomPopulation(prob, _POPULATION_SIZE)
 
 print(pop)
 
-for i in range(0, _NB_ITE_MAX):
+for i in range(_NB_ITE_MAX):
 	# child = Genetic.generateChild(prob, pop)
 	# print(str(child))
 	# print("")
-	if i%200 == 0:
+	if i%15 == 0:
 		Genetic.mixWithRandomSolutions(prob, pop)
 	childPop = Genetic.generateChildPopulation(prob, pop)
 	pop = Genetic.getNewGeneration(pop, childPop)
 
+totalTime = time.time() - startTotalTime
+
 print(pop)
+
+print('Genetic algorithm took {:.3f} ms'.format(totalTime*1000.0))
 
 displayBestSolutions(pop, prob)

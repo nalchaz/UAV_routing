@@ -9,7 +9,7 @@ class Solution:
 
 	def generateRandomSolution(self, prob):
 		for i in range(len(prob.x)):
-			self.sol = self.sol + [i+1]
+			self.sol = self.sol + [i]
 
 		random.shuffle(self.sol)
 		self.cost = Utils.DisTotal(self.sol, prob)
@@ -24,7 +24,8 @@ class Solution:
 		return copy
 
 	def __str__(self):
-		return str(self.sol) + " Cost : " + str(self.cost)
+		# return str(self.sol) + " Cost : " + str(self.cost)
+		return " Cost : " + str(self.cost)
 
 	def __eq__(self, other):
 		return self.sol == other.sol

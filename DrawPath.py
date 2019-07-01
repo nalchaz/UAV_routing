@@ -113,12 +113,12 @@ def drawLines(xini, yini, x, y, sol):
     yNumberValues.append(yini)
 
     # List to hold x values.
-    for i in range(0, len(sol)):
-        xNumberValues.append(x[sol[i]-1])
+    for i in range(len(sol)):
+        xNumberValues.append(x[sol[i]])
 
     # List to hold y values.
-    for i in range(0, len(sol)):
-        yNumberValues.append(y[sol[i]-1])
+    for i in range(len(sol)):
+        yNumberValues.append(y[sol[i]])
 
     #Going back to the starting point
     xNumberValues.append(xini)

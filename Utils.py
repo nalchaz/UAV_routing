@@ -22,25 +22,20 @@ def timing(f):
     return wrap
 
 def DisTotal(sol, prob):
-    dis = []
+    dis = 0
     for i in range(len(sol)):
         if i == 0:
-            #print("Fiz a distância entre o Inicial e o " + str(sol[i]))
-            dis = dis + [(((prob.x[sol[i]-1]-prob.xini))**2 + ((prob.y[sol[i]-1]-prob.yini))**2)**(1/2)]
+            dis += prob.distanceIni[sol[i]]
         else:
-            #print("Fiz a distância entre o " + str(sol[i]) + " e o " + str(sol[i-1]))
-            dis = dis + [(((prob.x[sol[i]-1]-prob.x[sol[i-1]-1]))**2 + ((prob.y[sol[i]-1]-prob.y[sol[i-1]-1]))**2)**(1/2)]
-    dis = dis + [(((prob.x[sol[i]-1]-prob.xini))**2 + ((prob.y[sol[i]-1]-prob.yini))**2)**(1/2)]
-    #print("Fiz a distância entre o Inicial e o " + str(sol[i]))
-    #print("Vetor de Distâncias: " + str(dis))
-    return sum(dis)
+            dis += prob.distances[sol[i]][sol[i-1]]
+    dis += prob.distanceIni[sol[len(sol)-1]]
+
+    return dis
 
 #Distance between two points
 def Distance(point1, point2, prob):
 
-    dis = (((prob.x[point1-1]-prob.x[point2-1]))**2 + ((prob.y[point1-1]-prob.y[point2-1]))**2)**(1/2)
-
-    return dis
+    return prob.distances[point1][point2]
 
 
 def CustoDrone(w,q,beta,dis,sol,bat):
