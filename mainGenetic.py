@@ -14,10 +14,10 @@ global _NB_ITE_MAX
 global _AUTONOMY
 
 _POPULATION_SIZE = 100
-_NB_ITE_MAX = 200
+_NB_ITE_MAX = 1000
 _AUTONOMY = 20000
 
-filename='ParaServidor_11_12/Ins100PerEPhantom'
+filename='ParaServidor_11_12/Ins20PerEPhantom'
 
 def displayBestSolutions(pop, prob):
 	DrawPath.subplot(2, 2, 1)
