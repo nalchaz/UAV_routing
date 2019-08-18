@@ -5,7 +5,7 @@ class Solution:
 
 	def __init__(self):
 		self.sol = [] # vector solution
-		self.cost = 0
+		self.cost = 0 
 
 	def generateRandomSolution(self, prob):
 		for i in range(len(prob.x)):

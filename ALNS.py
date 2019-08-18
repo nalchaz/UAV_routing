@@ -3,6 +3,7 @@
 
 import math
 import random
+import Utils
 from Utils import timing
 
 ########## Heurísticas
@@ -20,7 +21,8 @@ def HeuShaw(sol, q, prob):
     vet.append(sol[aux])
     del(sol[aux])
     for i in range(0,len(sol)):
-        dis.append((x[vet[0]-1]-x[sol[i]-1])**2+(y[vet[0]-1]-y[sol[i]-1])**2)
+        dis.append(Utils.DistanceALNS(vet[0], sol[i], prob))
+        # dis.append((x[vet[0]]-x[sol[i]])**2+(y[vet[0]]-y[sol[i]])**2)
     
     while len(vet) < q:
         #print("Solução Atual: " + str(sol))
@@ -59,22 +61,20 @@ def HeuPiorPos(sol, q, prob): # Pior Posição
     #print('Heurística Da Pior Posição')
     vet = []
     while len(vet) < q:
-        #dis = []
-        #for i in range(len(sol)):
-        #    if i == 0:
-        #        dis = dis + [((x[sol[i]-1]-xini)**2 + (y[sol[i]-1]-yini)**2)*50]
-        #    else:
-        #        dis = dis + [((x[sol[i]-1]-x[sol[i-1]-1])**2 + (y[sol[i]-1]-y[sol[i-1]-1])**2)*50]
-        #print("Distâncias: " + str(dis))
         DisTot = []
         for i in range(len(sol)):
             DisTot.append(0)
             if i == 0:
-                DisTot[i] = ((x[sol[i]-1]-xini)**2 + (y[sol[i]-1]-yini)**2)*50 + ((x[sol[i]-1]-x[sol[i+1]-1])**2 + (y[sol[i]-1]-y[sol[i+1]-1])**2)*50
+
+                DisTot[i] = prob.distanceIniALNS[sol[i]]*50 + Utils.DistanceALNS(sol[i], sol[i+1], prob)*50
+                # ((x[sol[i]]-xini)**2 + (y[sol[i]]-yini)**2)*50 + ((x[sol[i]]-x[sol[i+1]])**2 + (y[sol[i]]-y[sol[i+1]])**2)*50
+            # elif i == len(sol-1):
             elif i == len(sol)-1:
-                DisTot[i] = ((x[sol[i]-1]-xini)**2 + (y[sol[i]-1]-yini)**2)*50 + ((x[sol[i]-1]-x[sol[i-1]-1])**2 + (y[sol[i]-1]-y[sol[i-1]-1])**2)*50
+                DisTot[i] = prob.distanceIniALNS[sol[i]]*50 + Utils.DistanceALNS(sol[i], sol[i-1], prob)*50
+                # DisTot[i] = ((x[sol[i]]-xini)**2 + (y[sol[i]]-yini)**2)*50 + ((x[sol[i]]-x[sol[i-1]])**2 + (y[sol[i]]-y[sol[i-1]])**2)*50
             else:
-                DisTot[i] = ((x[sol[i]-1]-x[sol[i-1]-1])**2 + (y[sol[i]-1]-y[sol[i-1]-1])**2)*50 + ((x[sol[i]-1]-x[sol[i+1]-1])**2 + (y[sol[i]-1]-y[sol[i+1]-1])**2)*50
+                DisTot[i] = Utils.DistanceALNS(sol[i], sol[i-1], prob)*50 + Utils.DistanceALNS(sol[i], sol[i+1], prob)*50
+                # DisTot[i] = ((x[sol[i]]-x[sol[i-1]])**2 + (y[sol[i]]-y[sol[i-1]])**2)*50 + ((x[sol[i]]-x[sol[i+1]])**2 + (y[sol[i]]-y[sol[i+1]])**2)*50
 
         #print("Distâncias Totais: " + str(DisTot))
         aux = DisTot.index(max(DisTot))
@@ -99,30 +99,29 @@ def HeuGreedy(sol, vet, prob):
         MelhorIndice = 0
         for i in range(len(vet)):
             for j in range(len(sol)+1):
-                if j == 0:                 
-                    aux = (x[vet[i]-1]-xini)**2 + (y[vet[i]-1]-yini)**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j]-1])**2 + (y[vet[i]-1]-y[sol[j]-1])**2
+                if j == 0: 
+                    aux = prob.distanceIniALNS[vet[i]]
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j], prob)
+                    # aux = (x[vet[i]]-xini)**2 + (y[vet[i]]-yini)**2
+                    # aux = aux + (x[vet[i]]-x[sol[j]])**2 + (y[vet[i]]-y[sol[j]])**2
                 elif j == len(sol):
-                    aux = (x[vet[i]-1]-xini)**2 + (y[vet[i]-1]-yini)**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j-1]-1])**2 + (y[vet[i]-1]-y[sol[j-1]-1])**2
+                    aux = prob.distanceIniALNS[vet[i]]
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j-1], prob)
+                    # aux = (x[vet[i]]-xini)**2 + (y[vet[i]]-yini)**2
+                    # aux = aux + (x[vet[i]]-x[sol[j-1]])**2 + (y[vet[i]]-y[sol[j-1]])**2
                 else:
-                    aux = (x[vet[i]-1]-x[sol[j-1]-1])**2 + (y[vet[i]-1]-y[sol[j-1]-1])**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j]-1])**2 + (y[vet[i]-1]-y[sol[j]-1])**2
+                    aux = Utils.DistanceALNS(vet[i], sol[j-1], prob)
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j], prob)
+                    # aux = (x[vet[i]]-x[sol[j-1]])**2 + (y[vet[i]]-y[sol[j-1]])**2
+                    # aux = aux + (x[vet[i]]-x[sol[j]])**2 + (y[vet[i]]-y[sol[j]])**2
                 if aux < MenorGanho:
-                    #print("Auxiliar: " + str(aux))
-                    #print("Melhor Posição: " + str(j))
-                    #print("Melhor índice: " + str(vet[i]))
+
                     MenorGanho = aux
                     MelhorPosicao = j
                     MelhorIndice = i
-        #print("Solução Atual: " + str(sol))
-        #print("Vetor a ser adicionado: " + str(vet))
-        #print("Melhor Posição: " + str(MelhorPosicao))
-        #print("Melhor índice: " + str(vet[MelhorIndice]))
         sol.insert(MelhorPosicao,vet[MelhorIndice])
         del(vet[MelhorIndice])
-        #print("Solução Agora: " + str(sol))
-        #print("Vetor Agora: " + str(vet))
+
     return sol
 
 def HeuRegret(sol, vet, prob):
@@ -141,28 +140,30 @@ def HeuRegret(sol, vet, prob):
             MaiorGanho = 0
             MelhorPosicao.append(0)
             for j in range(len(sol)+1):
-                if j == 0:                 
-                    aux = (x[vet[i]-1]-xini)**2 + (y[vet[i]-1]-yini)**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j]-1])**2 + (y[vet[i]-1]-y[sol[j]-1])**2
+                if j == 0: 
+                    aux = prob.distanceIniALNS[vet[i]]
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j], prob)
+                    # aux = (x[vet[i]]-xini)**2 + (y[vet[i]]-yini)**2
+                    # aux = aux + (x[vet[i]]-x[sol[j]])**2 + (y[vet[i]]-y[sol[j]])**2
                 elif j == len(sol):
-                    aux = (x[vet[i]-1]-xini)**2 + (y[vet[i]-1]-yini)**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j-1]-1])**2 + (y[vet[i]-1]-y[sol[j-1]-1])**2
+                    aux = prob.distanceIniALNS[vet[i]]
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j-1], prob)
+                    # aux = (x[vet[i]]-xini)**2 + (y[vet[i]]-yini)**2
+                    # aux = aux + (x[vet[i]]-x[sol[j-1]])**2 + (y[vet[i]]-y[sol[j-1]])**2
                 else:
-                    aux = (x[vet[i]-1]-x[sol[j-1]-1])**2 + (y[vet[i]-1]-y[sol[j-1]-1])**2
-                    aux = aux + (x[vet[i]-1]-x[sol[j]-1])**2 + (y[vet[i]-1]-y[sol[j]-1])**2
+                    aux = Utils.DistanceALNS(vet[i], sol[j-1], prob)
+                    aux = aux + Utils.DistanceALNS(vet[i], sol[j], prob)
+                    # aux = (x[vet[i]]-x[sol[j-1]])**2 + (y[vet[i]]-y[sol[j-1]])**2
+                    # aux = aux + (x[vet[i]]-x[sol[j]])**2 + (y[vet[i]]-y[sol[j]])**2
                 if aux < MenorGanho:
                     MenorGanho = aux
                     MelhorPosicao[i] = j
                 if aux > MaiorGanho:
                     MaiorGanho = aux
             Ganhos.append(MaiorGanho-MenorGanho)
-        #print("Solução Atual: " + str(sol))
-        #print("Vetor a ser adicionado: " + str(vet))
-        #print("Ganhos: " + str(Ganhos))
-        #print("Melhores Posições: " + str(MelhorPosicao))
         sol.insert(MelhorPosicao[Ganhos.index(max(Ganhos))],vet[Ganhos.index(max(Ganhos))])
         del(vet[Ganhos.index(max(Ganhos))])
-        #print("Solução Nova: " + str(sol))
+
     return sol
 
 def BitSwap(sol):

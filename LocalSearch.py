@@ -61,7 +61,7 @@ def LocalSearchBestImp(sol, prob):
             sol.sol[besti+1] = sol.sol[bestj]
             sol.sol[bestj] = tmp
     
-    return sol.sol
+    return sol
    
 
 # Swap, inter first-improvement local search
@@ -69,17 +69,17 @@ def LocalSearchSwap(sol, prob):
     improve = True
     while improve :
         improve = False
-        i = random.randint(1,len(sol)-2)
+        i = random.randint(1,len(sol.sol)-2)
 
-        for cpt in range(len(sol)-2) : #for each i in the hamiltonian path
+        for cpt in range(len(sol.sol)-2) : #for each i in the hamiltonian path
             if cpt != i:
 
-                distanceCour = Utils.Distance(sol[cpt-1], sol[cpt], prob) + Utils.Distance(sol[cpt], sol[cpt+1], prob) + Utils.Distance(sol[i-1], sol[i], prob) + Utils.Distance(sol[i], sol[i+1], prob)
-                newDistance = Utils.Distance(sol[cpt-1], sol[i], prob) + Utils.Distance(sol[i], sol[cpt+1], prob) + Utils.Distance(sol[i-1], sol[cpt], prob) + Utils.Distance(sol[cpt], sol[i+1], prob)
+                distanceCour = Utils.Distance(sol.sol[cpt-1], sol.sol[cpt], prob) + Utils.Distance(sol.sol[cpt], sol.sol[cpt+1], prob) + Utils.Distance(sol.sol[i-1], sol.sol[i], prob) + Utils.Distance(sol.sol[i], sol.sol[i+1], prob)
+                newDistance = Utils.Distance(sol.sol[cpt-1], sol.sol[i], prob) + Utils.Distance(sol.sol[i], sol.sol[cpt+1], prob) + Utils.Distance(sol.sol[i-1], sol.sol[cpt], prob) + Utils.Distance(sol.sol[cpt], sol.sol[i+1], prob)
                 if distanceCour > newDistance :                   
-                    tmp = sol[i]
-                    sol[i] = sol[cpt]
-                    sol[cpt] = tmp
+                    tmp = sol.sol[i]
+                    sol.sol[i] = sol.sol[cpt]
+                    sol.sol[cpt] = tmp
                     improve = True
 
     return sol

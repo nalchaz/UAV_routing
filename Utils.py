@@ -32,11 +32,15 @@ def DisTotal(sol, prob):
 
     return dis
 
-#Distance between two points
+#Normal distance between two points
 def Distance(point1, point2, prob):
 
     return prob.distances[point1][point2]
 
+#Distance for ALNS, it's square distances
+def DistanceALNS(point1, point2, prob):
+
+    return prob.distancesALNS[point1][point2]
 
 def CustoDrone(w,q,beta,dis,sol,bat):
     aux = 0

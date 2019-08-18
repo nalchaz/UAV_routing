@@ -12,7 +12,7 @@ from Classes.solution import Solution
 global _NB_ITE_MAX
 global _AUTONOMY
 
-_NB_ITE_MAX = 0
+_NB_ITE_MAX = 100
 _AUTONOMY = 2000000
 
 #xini = 5
@@ -20,7 +20,7 @@ _AUTONOMY = 2000000
 #x = [4, 3, 7, 2, 1, 9, 4, 6, 10, 11] # 4, 9, 2] 
 #y = [5, 9, 1, 4, 4, 2, 9, 8, 8, 10] # 11, 8, 8] 
 
-filename='ParaServidor_11_12/Ins100PerEPhantom'
+filename='ParaServidor_11_12/Ins10PerEPhantom'
 
 prob = Problem(filename)
 
@@ -132,13 +132,11 @@ while ite < _NB_ITE_MAX:
     localSearchTime = localSearchTime + time.time() - start
     LocalDis = Utils.DisTotal(LocalSol.sol, prob)
 
-
     if BestD > LocalDis:
 
         BestD = LocalDis
         BestVet = LocalSol
         sol = LocalSol
-
         VetRem[AuxRem] = VetRem[AuxRem]*1.25 #+ 0.5
         VetIns[AuxIns] = VetIns[AuxIns]*1.25 #+ 0.5
     else:
@@ -178,5 +176,5 @@ if bat == None:
 else:
     DrawPath.drawPoints(prob.xini, prob.yini, prob.x, prob.y, bat)
 
-# DrawPath.drawLines(prob.xini, prob.yini, prob.x, prob.y, BestVet.sol)
+DrawPath.drawLines(prob.xini, prob.yini, prob.x, prob.y, BestVet.sol)
 DrawPath.draw()

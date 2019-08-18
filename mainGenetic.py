@@ -13,8 +13,8 @@ from Classes.solution import Solution
 global _NB_ITE_MAX
 global _AUTONOMY
 
-_POPULATION_SIZE = 100
-_NB_ITE_MAX = 1000
+_POPULATION_SIZE = 200
+_NB_ITE_MAX = 100
 _AUTONOMY = 20000
 
 filename='ParaServidor_11_12/Ins20PerEPhantom'
@@ -64,9 +64,6 @@ pop = Genetic.generateRandomPopulation(prob, _POPULATION_SIZE)
 print(pop)
 
 for i in range(_NB_ITE_MAX):
-	# child = Genetic.generateChild(prob, pop)
-	# print(str(child))
-	# print("")
 	if i%15 == 0:
 		Genetic.mixWithRandomSolutions(prob, pop)
 	childPop = Genetic.generateChildPopulation(prob, pop)

@@ -6,6 +6,7 @@ import random
 from Classes.solution import Solution
 from Classes.population import Population
 import LocalSearch
+
 def generateRandomSolution(prob):
 	sol = Solution()
 	sol.generateRandomSolution(prob)
@@ -59,7 +60,6 @@ def generateChild(prob, pop):
 		
 	#Here we reached the crossover so we start exchanging genes
 	
-
 	if firstPart == 0:
 		y = j = crossover
 		while y < len(parent2.sol):
@@ -75,7 +75,9 @@ def generateChild(prob, pop):
 			child.sol.append(parent2.sol[j])
 			y = y + 1
 
-	#CAN IMPLEMENT MUTATION
+	if random.random() < 0.1:    #10% chance of mutation
+		child = mutation(child, pop)
+
 	child.calculateCost(prob)
 
 	return child
@@ -112,4 +114,16 @@ def getNewGeneration(pop, childPop):
 			newGen.addElement(childPop[j]) 
 			j += 1
 		count += 1
-	return newGen
+	return newGen 
+
+def mutation(child, pop):
+
+	nb = random.randint(1, 4)
+	for cpt in range(1, nb):
+		i = random.randint(0, len(child.sol)-1)
+		j = random.randint(0, len(child.sol)-1)
+		tmp = child.sol[i]
+		child.sol[i] = child.sol[j]
+		child.sol[j] = tmp
+	return child
+
